@@ -24,10 +24,7 @@ zf = zipfile.ZipFile('bankloans.zip')
 loans = pd.read_csv(zf.open('bankloans.csv'))
 
 #EDA BEGINS BELOW-----------------    
-#df_2015.loc[df_2015['Country'] == 'Tanzania'] EG non-index based select
-#df.loc[(df['column_name'] >= A) & (df['column_name'] <= B)]   
-
-#print(loans.isna().sum())
+print(loans.isna().sum())  #missing only some labels
 unlabeled = loans[loans.isna().any(axis=1)].reset_index(drop=True).drop(
         columns=['default'])  #saving unlabeled data for unsupervised?
 loans.dropna(inplace=True) #missing labels, how else to handle?
@@ -39,4 +36,3 @@ plt.ylabel('Sampled Individuals')
 plt.grid(True)
 sns.barplot(data=DF(loans.default.value_counts()).T)
 
-corrs = loans
