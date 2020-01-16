@@ -36,3 +36,15 @@ plt.ylabel('Sampled Individuals')
 plt.grid(True)
 sns.barplot(data=DF(loans.default.value_counts()).T)
 
+unlabeled = loans[loans.isna().any(axis=1)].reset_index(drop=True).drop(
+        columns=['default'])  #saving unlabeled data for unsupervised?
+loans.dropna(inplace=True) #missing labels, how else to handle?
+
+#Descriptive statistics
+pd.set_option('display.expand_frame_repr', False)
+print(loans.describe().T)
+
+
+#Correlations
+corrs = loans.corr()
+sns.heatmap(corrs, annot=True)
