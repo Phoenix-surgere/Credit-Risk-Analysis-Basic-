@@ -48,3 +48,42 @@ print(loans.describe().T)
 #Correlations
 corrs = loans.corr()
 sns.heatmap(corrs, annot=True)
+
+
+# (Super basic) EDA:
+sns.set_style('darkgrid'); sns.set_palette('muted')
+
+sns.boxplot(x='ed', y='employ', data=loans, hue='default')
+plt.show()
+
+sns.boxplot(x='ed', y='address', data=loans, hue='default')
+plt.show()
+
+sns.jointplot("debtinc", "default", data=loans, kind="kde")
+plt.show()
+
+sns.jointplot("creddebt", "default", data=loans, kind="kde")
+plt.show()
+
+sns.violinplot(x='ed', y='income', hue='default', data=loans)
+plt.show()
+
+sns.scatterplot(x='debtinc', y='othdebt', hue='default', data=loans)
+plt.show()
+
+sns.scatterplot(x='age', y='income' , hue='default', data=loans)
+plt.show()
+
+#Descriptive stats based on default, quite informative
+group = loans.groupby('default').median()
+print(group)
+
+#tsne (PCA for models maybe not useful, small dataset anyway)
+
+from sklearn.manifold import TSNE 
+tsne = TSNE(random_state=seed)
+loansts = loans.copy()
+tsne_features = tsne.fit_transform(loansts)
+loansts['x'], loansts['y'] = tsne_features[:, 0], tsne_features[:,1]
+sns.scatterplot(x='x', y='y', hue='default', data=loansts)
+plt.show()
