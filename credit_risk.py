@@ -87,3 +87,28 @@ tsne_features = tsne.fit_transform(loansts)
 loansts['x'], loansts['y'] = tsne_features[:, 0], tsne_features[:,1]
 sns.scatterplot(x='x', y='y', hue='default', data=loansts)
 plt.show()
+
+
+#Fixing Imbalance (prior to modelling) - After feature selection
+X,y = loans.iloc[:, 0:-1], loans.iloc[:, -1]
+from sklearn.model_selection import train_test_split as tts
+X_train, X_test, y_train, y_test = tts(X,y, train_size=0.8, random_state=seed,
+                                       stratify=y)
+from imblearn.over_sampling import SMOTE  #should do SMOTE with X_train, y_train
+oversample = SMOTE()
+X_train,y_train = oversample.fit_resample(X_train,y_train)
+
+#Does not output anything meaningful
+from sklearn.feature_selection import VarianceThreshold as VT
+loans = loans.iloc[:, 0:-1]  
+vt = VT(threshold=0.6)
+vt.fit(loans)
+mask = vt.get_support()
+reduced_loans = loans.loc[:,mask]
+
+#PRE- Modelling!
+from sklearn.feature_selection import RFE
+from sklearn.linear_model import LogisticRegression as LR
+lr = LR(solver='lbfgs', max_iter=500)
+rfe = RFE(estimator=lr, n_features_to_select=5, verbose=2)
+rfe.fit(X_train, y_train)
