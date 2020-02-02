@@ -112,3 +112,5 @@ from sklearn.linear_model import LogisticRegression as LR
 lr = LR(solver='lbfgs', max_iter=500)
 rfe = RFE(estimator=lr, n_features_to_select=5, verbose=2)
 rfe.fit(X_train, y_train)
+X_reduced = X.loc:, rfe.support_]
+rankings = dict(zip(X, rfe.ranking_))
